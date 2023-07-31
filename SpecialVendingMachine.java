@@ -12,11 +12,11 @@ public class SpecialVendingMachine {
     
 
     public SpecialVendingMachine(MoneyBank moneyBank, Inventory inventory){
+        
         this.moneyBank = moneyBank;
         this.inventory = inventory;
         chosenSpecialItems = new ArrayList<items>();
-        updateSpecialInventory();
-        initializeChosenItems();
+        System.out.println("boop\n");
     }
 
     public void updateSpecialInventory(){
@@ -26,9 +26,14 @@ public class SpecialVendingMachine {
 
     public void initializeChosenItems(){
         items chosenItem;
+        System.out.println("boop\n");
+        System.out.println("Special item slots: " + specialItemSlots.size());
         for(int i=0; i<specialItemSlots.size(); i++){
             chosenItem = new items(specialItemSlots.get(i).getItemName(), 0, specialItemSlots.get(i).getItemAmount(), specialItemSlots.get(i).getItemCal());
             chosenSpecialItems.add(chosenItem);
+             System.out.printf("│ special items: %-10s  │   chosen items: %-10s    │%n", 
+                    specialItemSlots.get(i).getItemName(),
+                    chosenSpecialItems.get(i).getItemName());
         }
     }
 
@@ -36,6 +41,9 @@ public class SpecialVendingMachine {
     public void SpecialVendMenu(){
         int nChoice;
         boolean bContinue=true;
+
+        updateSpecialInventory();
+        initializeChosenItems();
 
         System.out.println("\nWelcome to the SPECIAL VENDING MACHINE menu\n");
         printRegItems();
@@ -67,7 +75,7 @@ public class SpecialVendingMachine {
         System.out.println("What do you want to buy? (Input the item no.)");
         choiceIndex = scan.nextInt()-1;
 
-        if(choiceIndex < 9){
+        if(choiceIndex !=8){
         System.out.println("Item selected [" + itemSlots.get(choiceIndex).getItemName()+"]");
         System.out.println("How many would you want to buy?");
         choiceQuantity = scan.nextInt();
@@ -101,7 +109,7 @@ public class SpecialVendingMachine {
         System.out.println("There are only "+itemSlots.get(choiceIndex).getItemQuantity()+" in the vending machine right now.");
         moneyBank.resetPartialPayment();
         }
-    }else if(choiceIndex == 9){
+    }else if(choiceIndex == 8){
         buySpecialItem(inputAmount);
     }
     }
