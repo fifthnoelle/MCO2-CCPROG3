@@ -18,7 +18,6 @@ public class Inventory {
      */
     public void initializeQuantity(Scanner scan){
         int i, quantity;
-        System.out.println("Stocks for Regular Vending Machine\n");
         for(i=0 ; i<8 ; i++){
             System.out.print("Enter Quantity for "+ itemSlots.get(i).getItemName()+": ");
             quantity = scan.nextInt();
@@ -29,7 +28,7 @@ public class Inventory {
 
     public void initializeSpecialQuantity(){
         int i, quantity;
-        System.out.println("\n\nStocks for Special Vending Machine");
+        System.out.println("\nStocks for Halo-halo\n");
         for(i=0 ; i<specialItemSlots.size() ; i++){
             System.out.print("Enter Quantity for "+ specialItemSlots.get(i).getItemName()+": ");
             quantity = scan.nextInt();

@@ -88,8 +88,8 @@ public class MoneyBank {
 
     public void resetPartialPayment(){
         for (int i = 0; i < partialPayment.size(); i++) {
-            Money currMoney = partialPayment.get(i);
-            currMoney.setQuantity(0);
+            partialPayment.get(i).setQuantity(0);
+            //System.out.println("Quantity of" + partialPayment.get(i).getValue() + " is " + partialPayment.get(i).getQuantity());
             }
     }
 
@@ -166,8 +166,9 @@ public class MoneyBank {
      * the user to be updated of the change given to them. If there is not enough change, a
      * warning will be printed urging for maintenance and addPayment will not execute.
      * @param totalChange the total change from the transaction
+     * @return 
      */
-    public void makeChange(float totalChange) {
+    public boolean makeChange(float totalChange) {
         int i;
         float amt = totalChange;
 
@@ -208,8 +209,10 @@ public class MoneyBank {
         if(amt > 0){
             System.out.println("Not enough change! Maintenance Required. (Change Error)");
             resetPartialPayment();
+            return false;
         }else{
             addPayment();
+            return true;
         }
     }
 

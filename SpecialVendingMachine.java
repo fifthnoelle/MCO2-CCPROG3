@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class SpecialVendingMachine {
@@ -27,6 +28,8 @@ public class SpecialVendingMachine {
     public void initializeChosenItems(){
         items chosenItem;
         System.out.println("boop\n");
+        clearChosenItems();
+        
         System.out.println("Special item slots: " + specialItemSlots.size());
         for(int i=0; i<specialItemSlots.size(); i++){
             chosenItem = new items(specialItemSlots.get(i).getItemName(), 0, specialItemSlots.get(i).getItemAmount(), specialItemSlots.get(i).getItemCal());
@@ -37,8 +40,18 @@ public class SpecialVendingMachine {
         }
     }
 
+    public void clearChosenItems(){
+        int size = chosenSpecialItems.size();
+        System.out.println("Chosen Items: " + size);
+        for(int i=0; i<size; i++){
+            System.out.println("Cleared: " + chosenSpecialItems.get(0).getItemName());
+            chosenSpecialItems.remove(0);
+        }
+        
+    }
 
-    public void SpecialVendMenu(){
+
+    public void specialVendMenu(){
         int nChoice;
         boolean bContinue=true;
 
@@ -47,18 +60,20 @@ public class SpecialVendingMachine {
 
         System.out.println("\nWelcome to the SPECIAL VENDING MACHINE menu\n");
         printRegItems();
-        System.out.println("\nWhat do you want to do?");
-        System.out.println("[1] Buy");
-        System.out.println("[2] Exit");
-        nChoice = scan.nextInt();
         do{
-        switch(nChoice){
-            case 1:buyItem(scan);
-            bContinue = false;
-            break;
-            case 2: bContinue = false;
-            break;
-        }
+            System.out.println("\nWhat do you want to do?");
+            System.out.println("[1] Buy");
+            System.out.println("[2] Exit");
+
+            nChoice = scan.nextInt();
+            
+            switch(nChoice){
+                case 1:buyItem(scan);
+                bContinue = false;
+                break;
+                case 2: bContinue = false;
+                break;
+            }
         }while(bContinue);
         
     }
@@ -87,6 +102,8 @@ public class SpecialVendingMachine {
             transactionCost += calculateTransactionCost(choiceQuantity, choiceIndex);
             if(checkPriceMoney(inputAmount, transactionCost)){
             System.out.println("Total Price: "+ transactionCost +"\n");
+            
+            do{
             System.out.println("[1] Check Out");
             System.out.println("[0] Cancel Transaction");
             choiceOption=scan.nextInt();
@@ -97,7 +114,9 @@ public class SpecialVendingMachine {
                     case 1 : checkOut(transactionCost, choiceQuantity, choiceIndex, inputAmount);
                             updateQuantity(choiceIndex, choiceQuantity);
                     break;
+                    default: System.out.println("Invalid Input");
                 }
+            }while(choiceOption < 0 || choiceOption> 1);
         }
         else{
         System.out.println("Money is too Little.");
@@ -138,15 +157,19 @@ public class SpecialVendingMachine {
             System.out.println("There are only "+specialItemSlots.get(choiceIndex).getItemQuantity()+" in the vending machine right now.");
         }
 
-        System.out.println("Add Another?");
-            System.out.println("[1] Yes");
-            System.out.println("[0] No");
-        choiceNum = scan.nextInt();
+            do{
+                System.out.println("Add Another?");
+                System.out.println("[1] Yes");
+                System.out.println("[0] No");
+                choiceNum = scan.nextInt();
+            }while(choiceNum < 0 || choiceNum > 1);
+        
+
         }while(choiceNum != 0);
 
         printSpecialReceipt();
 
-            transactionCost += calculateSpecialTransactionCost();
+            transactionCost = calculateSpecialTransactionCost();
         if(checkPriceMoney(inputAmount, transactionCost)){
             System.out.println("Total Price: "+ transactionCost +"\n");
             System.out.println("[1] Check Out");
@@ -156,9 +179,8 @@ public class SpecialVendingMachine {
                 switch(choiceOption){
                     case 0 : 
                     break;
-                    //case 1 : checkOut(transactionCost, choiceQuantity, choiceIndex, inputAmount);
-                    //        updateQuantity(choiceIndex, choiceQuantity);
-                    //break;
+                    case 1 : checkOutSpecial(transactionCost, inputAmount);
+                    break;
                 }
         }
         else{
@@ -214,7 +236,6 @@ public void printSpecialReceipt() {
     System.out.println("╒══════════════════\u2550\u2550\u2550\u2550\u2550═╤══════════╤══════════╤══════════╕");
     System.out.println("│          Name          │ Quantity │  Price   │ Calories │");
     System.out.println("╞═══════════════════\u2550\u2550\u2550\u2550\u2550╪══════════╪══════════╪══════════╡");
-    System.out.println("\nItems chosen:"); 
             for(int i=0; i<chosenSpecialItems.size(); i++){
                 if(chosenSpecialItems.get(i).getItemQuantity()!=0){
                 System.out.printf("│  %-20s  │    %2d    │  P%-5.2f  │   %3d    │%n", 
@@ -224,7 +245,7 @@ public void printSpecialReceipt() {
                     chosenSpecialItems.get(i).getItemCal());
                 }
             }
-    System.out.println("╘════════════╧═══════════════════\u2550\u2550\u2550\u2550\u2550╧══════════╧══════════╧══════════╛");
+    System.out.println("╘═══════════════════\u2550\u2550\u2550\u2550\u2550╧══════════╧══════════╧══════════╛");
     }
     
 
@@ -282,6 +303,12 @@ public void printSpecialReceipt() {
         itemSlots.get(index).setItemQuantity(itemSlots.get(index).getItemQuantity()-inputQuantity);
     }
 
+    public void updateSpecialQuantity(){ 
+        for(int i = 0; i < specialItemSlots.size()-1; i++){
+            specialItemSlots.get(i).setItemQuantity(specialItemSlots.get(i).getItemQuantity() - chosenSpecialItems.get(i).getItemQuantity());
+        }
+    }
+
 
     
     /** 
@@ -304,6 +331,72 @@ public void printSpecialReceipt() {
 
     }
 
+    public void checkOutSpecial(float transactionCost, float inputAmount) {
+        float totalChange;
+        int totalCal, currentInd, numOfVariance = 0;
+        boolean indiv = false, hasChange;
+
+        System.out.println("\n\nCheck Out");
+
+        for(int i= 0; i<specialItemSlots.size(); i++){
+                if(chosenSpecialItems.get(i).getItemQuantity() > 0){
+                    numOfVariance ++;
+                    currentInd = i;
+                    indiv = specialItemSlots.get(i).checkIndiv();
+                }
+            }
+
+        if(numOfVariance == 1 && indiv){
+                System.out.println("\nYou bought [" + chosenSpecialItems.get(0).getItemQuantity() + "] [" + chosenSpecialItems.get(0).getItemName() + "]");
+            }else if(numOfVariance == 1 && !indiv){
+                System.out.println("\nCannot be bought individually");
+                wait(1000);
+                moneyBank.resetPartialPayment();
+                specialVendMenu();
+            }
+
+            System.out.println("Total:" + transactionCost);
+            totalChange = inputAmount - transactionCost;
+            hasChange = moneyBank.makeChange(totalChange);
+            wait(2000);
+
+        if(hasChange && numOfVariance>1){
+            showPrep();
+            updateSpecialQuantity();
+        }else if (!hasChange){
+            specialVendMenu();
+        }
+            
+
+    }
+
+    public void showPrep(){
+        int totalCal;
+        for(int i = 0; i < chosenSpecialItems.size(); i++){
+                for(int j= 0; j<specialItemSlots.size(); j++){
+                    if(Objects.equals(chosenSpecialItems.get(i).getItemName(), specialItemSlots.get(j).getItemName()) && chosenSpecialItems.get(i).getItemQuantity()>0){
+                        System.out.println(specialItemSlots.get(j).getPrepStatement());
+                        wait(1500);
+                    }
+                }
+            }
+
+            //serving
+            totalCal = totalCal();
+            System.out.println("\nHere is your Halo-halo! \nTotal Calories: " + totalCal);
+
+            System.out.println("       \r\n" + //
+                    "          ,O.   //\r\n" + //
+                    "       ,(:::)=//\r\n" + //
+                    "      (  `~(###)\r\n" + //
+                    "       %---'`\"y\r\n" + //
+                    "        \\    /\r\n" + //
+                    "         \\  /\r\n" + //
+                    "        __)(__  \r\n" + //
+                    "       '------`");
+
+    }
+
     /** 
      * Calculates the transaction cost of the user's session.
      * @param quantity the amount of how many items were being bought.
@@ -322,10 +415,35 @@ public void printSpecialReceipt() {
 
     public float calculateSpecialTransactionCost(){
         float price = 0;
-        for(int i=0; i<specialItemSlots.size();i++){
-            price += specialItemSlots.get(i).getItemAmount() * specialItemSlots.get(i).getItemQuantity();
+        for(int i=0; i<chosenSpecialItems.size();i++){
+            price += chosenSpecialItems.get(i).getItemAmount() * chosenSpecialItems.get(i).getItemQuantity();
         }
 
         return price; 
     }
+
+    public int totalCal(){
+        int cal = 0;
+        for(int i = 0; i < chosenSpecialItems.size(); i++){
+                for(int j= 0; j<specialItemSlots.size(); j++){
+                    if(Objects.equals(chosenSpecialItems.get(i).getItemName(), specialItemSlots.get(j).getItemName())){
+                        cal += specialItemSlots.get(j).getItemCal() * chosenSpecialItems.get(i).getItemQuantity();
+                    }
+                }
+            }
+
+        return cal; 
+    }
+
+    public static void wait(int ms)
+{
+    try
+    {
+        Thread.sleep(ms);
+    }
+    catch(InterruptedException ex)
+    {
+        Thread.currentThread().interrupt();
+    }
+}
 }
