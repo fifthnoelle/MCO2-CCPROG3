@@ -1,7 +1,6 @@
 public class SpecialItem extends items {
     private String prepStatement;
     private boolean indivItem = false;
-    private int chosenQuantity = 0;
 
     public SpecialItem(String itemName, float itemAmount, int itemCal, String prepStatement){
         super(itemName, itemAmount, itemCal);
