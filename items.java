@@ -1,3 +1,13 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Other/File.java to edit this template
+ */
+package com.mycompany.mco_gui;
+
+/**
+ *
+ * @author rdpun
+ */
 public class items {
     private String itemName;
     private float itemAmount;
@@ -10,7 +20,7 @@ public class items {
         this.itemAmount = itemAmount;
         this.itemCal = itemCal;
     }
-
+    
     public items(String itemName, int itemQuantity, float itemAmount, int itemCal){
         this.itemName = itemName;
         this.itemQuantity = itemQuantity;
@@ -18,6 +28,7 @@ public class items {
         this.itemCal = itemCal;
     }
 
+    
     /** 
      * gets the item's name.
      * @return returns the item's name.
@@ -97,6 +108,5 @@ public class items {
     public void setItemQuantity(int itemQuantity) {
         this.itemQuantity = itemQuantity;
     }
-
-    
 }
+

@@ -1,22 +1,24 @@
+package com.mycompany.mco_gui;
+
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Inventory {
     private ArrayList<items> itemSlots;
-    private ArrayList<SpecialItem> specialItemSlots;
+    private ArrayList<SpecialItems> specialItemSlots;
     private Scanner scan = new Scanner(System.in);
 
     public Inventory(){
         this.itemSlots = new ArrayList<items>();
-        this.specialItemSlots = new ArrayList<SpecialItem>();
+        this.specialItemSlots = new ArrayList<SpecialItems>();
         }
 
 /** 
      * Initializes the quantity of the items inside the vending machine before operating
      * @param scan the Scanner object used for getting the user's input
      */
-    public void initializeQuantity(Scanner scan){
+    /*public void initializeQuantity(){
         int i, quantity;
         for(i=0 ; i<8 ; i++){
             System.out.print("Enter Quantity for "+ itemSlots.get(i).getItemName()+": ");
@@ -35,9 +37,9 @@ public class Inventory {
             specialItemSlots.get(i).setItemQuantity(quantity);
             specialItemSlots.get(i).setInitialQuantity(quantity);
         }
-    }
+    }*/
 
-    public void addSpecialItems(SpecialItem item) {
+    public void addSpecialItems(SpecialItems item) {
         specialItemSlots.add(item);
     }
 
@@ -54,7 +56,7 @@ public class Inventory {
         return this.itemSlots;
     }
 
-    public ArrayList<SpecialItem> getSpecialItems(){
+    public ArrayList<SpecialItems> getSpecialItems(){
         return this.specialItemSlots;
     }
 }

@@ -1,6 +1,11 @@
+package com.mycompany.mco_gui;
+
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class SpecialVendingMachine {
     Inventory inventory;
@@ -8,7 +13,7 @@ public class SpecialVendingMachine {
     Scanner scan = new Scanner(System.in);
     private ArrayList<items> itemSlots;
     private ArrayList<items> chosenSpecialItems;
-    private ArrayList<SpecialItem> specialItemSlots;
+    private ArrayList<SpecialItems> specialItemSlots;
     
     
 
@@ -27,7 +32,6 @@ public class SpecialVendingMachine {
 
     public void initializeChosenItems(){
         items chosenItem;
-        System.out.println("boop\n");
         clearChosenItems();
         
         System.out.println("Special item slots: " + specialItemSlots.size());
@@ -51,7 +55,7 @@ public class SpecialVendingMachine {
     }
 
 
-    public void specialVendMenu(){
+    /*public void specialVendMenu(){
         int nChoice;
         boolean bContinue=true;
 
@@ -76,9 +80,9 @@ public class SpecialVendingMachine {
             }
         }while(bContinue);
         
-    }
+    }*/
 
-    public void buyItem(Scanner scan){
+    /*public void buyItem(Scanner scan){
         int choiceIndex, choiceQuantity, choiceOption;
         float transactionCost = 0, inputAmount;
         
@@ -131,63 +135,12 @@ public class SpecialVendingMachine {
     }else if(choiceIndex == 8){
         buySpecialItem(inputAmount);
     }
-    }
+    }*/
 
     /**
      * The interface wherein the user uses to buy from the Vending Machine.
      * @param scan the Scanner object used for getting the user's input
      */
-    public void buySpecialItem(float inputAmount){
-        int choiceIndex, choiceQuantity, choiceOption, choiceNum;
-        float transactionCost = 0;
-
-        do{
-        printSpecialItems();
-        System.out.println("What do you want to add to the Halo-halo? (Input the item no.)");
-        choiceIndex = scan.nextInt()-1;
-
-        if(checkSpecialAvailable(1,choiceIndex)){
-        for(int i=0; i<chosenSpecialItems.size(); i++){
-            if(chosenSpecialItems.get(i).getItemName() == specialItemSlots.get(choiceIndex).getItemName()){
-                chosenSpecialItems.get(i).setItemQuantity(chosenSpecialItems.get(i).getItemQuantity() + 1);
-            }
-        }
-        System.out.println("Item selected [" + specialItemSlots.get(choiceIndex).getItemName()+"]");
-        }else{
-            System.out.println("There are only "+specialItemSlots.get(choiceIndex).getItemQuantity()+" in the vending machine right now.");
-        }
-
-            do{
-                System.out.println("Add Another?");
-                System.out.println("[1] Yes");
-                System.out.println("[0] No");
-                choiceNum = scan.nextInt();
-            }while(choiceNum < 0 || choiceNum > 1);
-        
-
-        }while(choiceNum != 0);
-
-        printSpecialReceipt();
-
-            transactionCost = calculateSpecialTransactionCost();
-        if(checkPriceMoney(inputAmount, transactionCost)){
-            System.out.println("Total Price: "+ transactionCost +"\n");
-            System.out.println("[1] Check Out");
-            System.out.println("[0] Cancel Transaction");
-            choiceOption=scan.nextInt();
-            
-                switch(choiceOption){
-                    case 0 : 
-                    break;
-                    case 1 : checkOutSpecial(transactionCost, inputAmount);
-                    break;
-                }
-        }
-        else{
-        System.out.println("Money is too Little.");
-        moneyBank.resetPartialPayment();
-        }
-    }
 
     public void printRegItems() {
         int i;
@@ -352,7 +305,7 @@ public void printSpecialReceipt() {
                 System.out.println("\nCannot be bought individually");
                 wait(1000);
                 moneyBank.resetPartialPayment();
-                specialVendMenu();
+                //specialVendMenu();
             }
 
             System.out.println("Total:" + transactionCost);
@@ -364,37 +317,60 @@ public void printSpecialReceipt() {
             showPrep();
             updateSpecialQuantity();
         }else if (!hasChange){
-            specialVendMenu();
+            //specialVendMenu();
         }
             
 
     }
 
-    public void showPrep(){
-        int totalCal;
-        for(int i = 0; i < chosenSpecialItems.size(); i++){
-                for(int j= 0; j<specialItemSlots.size(); j++){
-                    if(Objects.equals(chosenSpecialItems.get(i).getItemName(), specialItemSlots.get(j).getItemName()) && chosenSpecialItems.get(i).getItemQuantity()>0){
-                        System.out.println(specialItemSlots.get(j).getPrepStatement());
-                        wait(1500);
+   
+    private void showPrep() {
+        JTextArea textArea = new JTextArea(10, 40);
+        textArea.setEditable(false);
+
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        for (int i = 0; i < chosenSpecialItems.size(); i++) {
+            for (int j = 0; j < specialItemSlots.size(); j++) {
+                if (Objects.equals(chosenSpecialItems.get(i).getItemName(), specialItemSlots.get(j).getItemName()) && chosenSpecialItems.get(i).getItemQuantity() > 0) {
+                    textArea.append(specialItemSlots.get(j).getPrepStatement() + "\n");
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
                     }
                 }
             }
+        }
 
-            //serving
-            totalCal = totalCal();
-            System.out.println("\nHere is your Halo-halo! \nTotal Calories: " + totalCal);
+        int totalCal = totalCal();
+        textArea.append("\nHere is your Halo-halo!\nTotal Calories: " + totalCal + "\n");
 
-            System.out.println("       \r\n" + //
-                    "          ,O.   //\r\n" + //
-                    "       ,(:::)=//\r\n" + //
-                    "      (  `~(###)\r\n" + //
-                    "       %---'`\"y\r\n" + //
-                    "        \\    /\r\n" + //
-                    "         \\  /\r\n" + //
-                    "        __)(__  \r\n" + //
-                    "       '------`");
+        // Creating a JOptionPane with a scrollable text area
+        JOptionPane.showMessageDialog(null, scrollPane,
+                "Printing and Serving", JOptionPane.INFORMATION_MESSAGE);
 
+        String asciiArt = "       \r\n" +
+                "          ,O.   //\r\n" +
+                "       ,(:::)=//\r\n" +
+                "      (  `~(###)\r\n" +
+                "       %---'`\"y\r\n" +
+                "        \\    /\r\n" +
+                "         \\  /\r\n" +
+                "        __)(__  \r\n" +
+                "       '------`";
+
+        // Display the ASCII art separately in a popup
+        JTextArea asciiArea = new JTextArea(9, 40);
+        asciiArea.setEditable(false);
+        asciiArea.setText(asciiArt);
+
+        JScrollPane asciiScrollPane = new JScrollPane(asciiArea);
+        asciiScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        JOptionPane.showMessageDialog(null, asciiScrollPane,
+                "Serving Confirmation", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /** 
