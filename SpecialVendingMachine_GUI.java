@@ -387,7 +387,7 @@ public void printSpecialItems() {
 
 public void checkOutSpecial(float transactionCost, float inputAmount) {
     float totalChange;
-    int totalCal, currentInd, numOfVariance = 0;
+    int totalCal, currentInd=0, numOfVariance = 0;
     boolean indiv = false;
 
     StringBuilder message = new StringBuilder("\n\nCheck Out");
@@ -402,10 +402,14 @@ public void checkOutSpecial(float transactionCost, float inputAmount) {
 
     if (numOfVariance == 1 && indiv) {
         message.append("\nYou bought [")
-                .append(chosenSpecialItems.get(0).getItemQuantity())
+                .append(chosenSpecialItems.get(currentInd).getItemQuantity())
                 .append("] [")
-                .append(chosenSpecialItems.get(0).getItemName())
+                .append(chosenSpecialItems.get(currentInd).getItemName())
                 .append("]");
+        updateSpecialQuantity(); // Assuming this is your method
+        initializeChosenItems();
+        
+        
     } else if (numOfVariance == 1 && !indiv) {
         message.append("\nCannot be bought individually");
         // Assuming wait is a custom method for pausing, you might replace this with appropriate GUI waiting logic
@@ -414,18 +418,19 @@ public void checkOutSpecial(float transactionCost, float inputAmount) {
         //specialVendMenu(); // Assuming this is your method for the vending menu
     }
 
+    if(indiv || numOfVariance>1){
     message.append("\nTotal: ").append(transactionCost);
     totalChange = inputAmount - transactionCost;
     boolean hasChange = moneyBank.makeChange(totalChange);
 
-    if (hasChange && numOfVariance > 1) {
+    if (hasChange && numOfVariance>1) {
         showPrep(); // Assuming this is your method
         updateSpecialQuantity(); // Assuming this is your method
         initializeChosenItems();
-    } else if (!hasChange) {
-        //specialVendMenu(); // Assuming this is your method
+    }else if(!hasChange){
+
     }
-    
+    }
     // Display the message using a JOptionPane dialog
     JOptionPane.showMessageDialog(null, message.toString(), "Check Out", JOptionPane.INFORMATION_MESSAGE);
 }
